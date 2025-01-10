@@ -14,7 +14,9 @@ firebaseConfig = {
 
   "appId": "1:394660088399:web:6e90ba87f6381217c2f83a",
 
-  "measurementId": "G-115SYLPZ5V"
+  "measurementId": "G-115SYLPZ5V",
+
+  "databaseURL": "https://skillsync-14532-default-rtdb.firebaseio.com/"
 
 }
 
@@ -31,6 +33,7 @@ def signup():
         print("Email already exists")
 
 def login():
+    ... # code for login
 
 
 
