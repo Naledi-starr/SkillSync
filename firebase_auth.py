@@ -22,24 +22,43 @@ firebaseConfig = {
 
 firebase = pyrebase.initialize_app(firebaseConfig)
 auth = firebase.auth()
+db = firebase.database()
 
-def signup():
-    email = input("Enter email: ")
-    password = input("Enter password: ")
+# Firebase Authentication
+def signup(email, password, name, role, expertise=None):
+    user = auth.create_user_with_email_and_password(email, password)
+    db.child("Users").child(user["localId"]).set({
+        "name": name,
+        "email": email,
+        "role": role,
+        "expertise": expertise
+    })
+    return "Signup successful!"
+
+def login(email, password):
     try:
-        user = auth.create_user_with_email_and_password(email, password)
-        print("Successfully signed up")
+        user = auth.sign_in_with_email_and_password(email, password)
+        return user["idToken"], user["localId"]
     except:
-        print("Email already exists")
+        return None, None
 
-def login():
-    ... # code for login
+# Firebase Database Operations
+def fetch_users(role, expertise=None):
+    users = db.child("Users").order_by_child("role").equal_to(role).get()
+    if expertise:
+        users = [user for user in users if user.val().get("expertise") == expertise]
+    return users
 
+def save_meeting(mentor_id, peer_id, meeting_time):
+    db.child("Meetings").push({
+        "mentor_id": mentor_id,
+        "peer_id": peer_id,
+        "time": meeting_time.isoformat(),
+        "status": "pending"
+    })
 
+def fetch_meetings():
+    return db.child("Meetings").get()
 
-answer = input("Are you a new user? [y/n]")   
-if answer == 'yes':
-    signup()
-elif answer == 'n':
-    login()
-#comment
+def cancel_meeting(booking_id):
+    db.child("Meetings").child(booking_id).remove()
