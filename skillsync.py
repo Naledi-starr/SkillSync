@@ -2,7 +2,7 @@ import click
 from datetime import datetime
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
-from firebase_config import signup, login, fetch_users, save_meeting, fetch_meetings, cancel_meeting
+from firebase_auth import signup, login, fetch_users, save_meeting, fetch_meetings, cancel_meeting
 
 # Google Calendar Setup
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
